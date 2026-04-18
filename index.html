@@ -393,8 +393,9 @@
     <p class="section-desc">Нажми на карточку, чтобы увидеть ответ. Честно оцени себя.</p>
 
     <div class="fc-controls">
-      <button class="toggle-pill on" id="pill-hira" onclick="toggleFcType('hiragana')">Хирагана</button>
-      <button class="toggle-pill"    id="pill-kata" onclick="toggleFcType('katakana')">Катакана</button>
+      <button class="toggle-pill on" id="pill-hira" onclick="setFcType('hiragana')">Хирагана</button>
+      <button class="toggle-pill"    id="pill-kata" onclick="setFcType('katakana')">Катакана</button>
+      <button class="toggle-pill"    id="pill-both" onclick="setFcType('both')">Вместе</button>
       <div style="width:1px; background: var(--border); margin: 4px 6px;"></div>
       <button class="toggle-pill on" id="pill-new"  onclick="setFcMode('new')">Только новые</button>
       <button class="toggle-pill"    id="pill-all"  onclick="setFcMode('all')">Все буквы</button>
@@ -871,11 +872,12 @@ function buildDeck() {
   renderFc();
 }
 
-function toggleFcType(type) {
-  fcTypes[type] = !fcTypes[type];
-  if (!fcTypes.hiragana && !fcTypes.katakana) fcTypes[type] = true;
-  document.getElementById('pill-hira').className = 'toggle-pill' + (fcTypes.hiragana ? ' on' : '');
-  document.getElementById('pill-kata').className = 'toggle-pill' + (fcTypes.katakana ? ' on' : '');
+function setFcType(type) {
+  fcTypes.hiragana = (type === 'hiragana' || type === 'both');
+  fcTypes.katakana = (type === 'katakana' || type === 'both');
+  document.getElementById('pill-hira').className = 'toggle-pill' + (type === 'hiragana' ? ' on' : '');
+  document.getElementById('pill-kata').className = 'toggle-pill' + (type === 'katakana' ? ' on' : '');
+  document.getElementById('pill-both').className = 'toggle-pill' + (type === 'both'     ? ' on' : '');
   buildDeck();
 }
 
