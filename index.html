@@ -347,6 +347,45 @@
     .done-screen h2 { font-size: 1.8rem; font-weight: 800; margin-bottom: 10px; }
     .done-screen p  { color: var(--muted); margin-bottom: 24px; font-size: 1rem; }
 
+    /* ── Reading ── */
+    .text-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 14px; margin-top: 8px; }
+    .text-card {
+      background: var(--white); border-radius: var(--radius); border: 2px solid var(--border);
+      padding: 20px; cursor: pointer; transition: all .18s; box-shadow: var(--shadow);
+    }
+    .text-card:hover { border-color: var(--red-mid); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(192,57,43,0.12); }
+    .tc-emoji  { font-size: 2rem; margin-bottom: 8px; }
+    .tc-title  { font-size: 1.1rem; font-weight: 800; margin-bottom: 2px; }
+    .tc-titleru{ font-size: 0.82rem; color: var(--muted); margin-bottom: 10px; }
+    .tc-preview{ font-size: 0.83rem; color: var(--muted); line-height: 1.5; }
+
+    .rd-back { display: flex; align-items: center; gap: 8px; cursor: pointer; color: var(--muted); font-size: 0.88rem; margin-bottom: 20px; background: none; border: none; padding: 0; }
+    .rd-back:hover { color: var(--red); }
+    .rd-header { display: flex; align-items: baseline; gap: 12px; margin-bottom: 6px; flex-wrap: wrap; }
+    .rd-title  { font-size: 1.5rem; font-weight: 800; }
+    .rd-titleru{ font-size: 0.92rem; color: var(--muted); }
+    .rd-controls { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 24px; align-items: center; }
+    .rd-toggle {
+      padding: 6px 16px; border-radius: 99px; border: 2px solid var(--border);
+      background: var(--white); cursor: pointer; font-size: 0.82rem; font-weight: 600;
+      transition: all .16s; color: var(--muted);
+    }
+    .rd-toggle.on { border-color: var(--red); color: var(--red); background: var(--red-light); }
+
+    .rd-sentences { display: flex; flex-direction: column; gap: 14px; }
+    .rd-sentence {
+      background: var(--white); border-radius: var(--radius); border: 1px solid var(--border);
+      padding: 16px 18px; box-shadow: var(--shadow);
+    }
+    .rd-jp-row { display: flex; align-items: center; gap: 10px; }
+    .rd-jp { font-size: 1.25rem; line-height: 1.5; flex: 1; }
+    .rd-spk { background: none; border: none; cursor: pointer; font-size: 1.2rem; opacity: 0.5; padding: 2px 4px; transition: opacity .16s; flex-shrink: 0; }
+    .rd-spk:hover { opacity: 1; }
+    .rd-roma { font-size: 0.82rem; color: var(--muted); margin-top: 5px; display: none; }
+    .rd-ru   { font-size: 0.88rem; color: var(--red); margin-top: 5px; font-weight: 600; display: none; border-top: 1px solid var(--border); padding-top: 6px; }
+    .show-roma .rd-roma { display: block; }
+    .show-ru   .rd-ru   { display: block; }
+
     /* ── Numbers ── */
     .num-grid { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 28px; }
     .num-card {
@@ -446,6 +485,7 @@
     <button class="tab-btn" onclick="showSection('numbers')">Числа</button>
     <button class="tab-btn" onclick="showSection('particles')">Частицы</button>
     <button class="tab-btn" onclick="showSection('vocab')">Словарь</button>
+    <button class="tab-btn" onclick="showSection('reading')">Чтение</button>
   </nav>
 </header>
 
@@ -513,6 +553,13 @@
     <h1 class="section-title">Базовые кандзи</h1>
     <p class="section-desc">20 самых простых иероглифов — числа, природа, базовые понятия. Нажми, чтобы узнать чтение и значение.</p>
     <div class="kanji-grid" id="kanji-grid"></div>
+  </section>
+
+  <!-- ══════════ READING ══════════ -->
+  <section id="reading" class="section">
+    <h1 class="section-title">Чтение</h1>
+    <p class="section-desc">Короткие тексты из знакомых слов. Читай, слушай, проверяй себя.</p>
+    <div id="reading-content"></div>
   </section>
 
   <!-- ══════════ NUMBERS ══════════ -->
@@ -818,7 +865,7 @@ function saveMastered() {
 // ═══════════════════════════════════════════════
 // NAVIGATION
 // ═══════════════════════════════════════════════
-const SECTION_LABELS = { alphabet:'Алфавит', flashcards:'Карточки', words:'Слова', kanji:'Кандзи', numbers:'Числа', particles:'Частицы', vocab:'Словарь' };
+const SECTION_LABELS = { alphabet:'Алфавит', flashcards:'Карточки', words:'Слова', kanji:'Кандзи', numbers:'Числа', particles:'Частицы', vocab:'Словарь', reading:'Чтение' };
 
 function showSection(id) {
   document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
@@ -832,6 +879,7 @@ function showSection(id) {
   if (id === 'numbers')   renderNumbers();
   if (id === 'particles') renderParticles();
   if (id === 'vocab')     initVocab();
+  if (id === 'reading')   renderReadingList();
 }
 
 // ═══════════════════════════════════════════════
@@ -1661,6 +1709,138 @@ function vQuizPick(el, picked, correct) {
     });
     setTimeout(() => { vIdx++; renderVocabCard(); }, 1500);
   }
+}
+
+// ═══════════════════════════════════════════════
+// READING DATA & LOGIC
+// ═══════════════════════════════════════════════
+const TEXTS = [
+  { emoji:'👋', title:'自己紹介', titleRu:'Знакомство', sentences:[
+    { jp:'はじめまして。わたしは アンナです。',       roma:'Hajimemashite. Watashi wa Anna desu.',       ru:'Приятно познакомиться. Меня зовут Анна.' },
+    { jp:'ロシアじんです。',                          roma:'Roshiajin desu.',                            ru:'Я россиянка.' },
+    { jp:'にほんごの がくせいです。',                 roma:'Nihongo no gakusei desu.',                   ru:'Я студентка японского языка.' },
+    { jp:'にほんが すきです。',                       roma:'Nihon ga suki desu.',                        ru:'Мне нравится Япония.' },
+    { jp:'どうぞ よろしくおねがいします。',           roma:'Douzo yoroshiku onegaishimasu.',             ru:'Рада знакомству.' },
+  ]},
+  { emoji:'🌆', title:'まちで', titleRu:'В городе', sentences:[
+    { jp:'えきの ちかくに スーパーが あります。',     roma:'Eki no chikaku ni suupaa ga arimasu.',       ru:'Рядом со станцией есть супермаркет.' },
+    { jp:'デパートは すこし とおいです。',            roma:'Depaato wa sukoshi tooi desu.',               ru:'Универмаг немного далеко.' },
+    { jp:'バスで いきます。',                         roma:'Basu de ikimasu.',                           ru:'Я еду на автобусе.' },
+    { jp:'こうえんは きれいです。',                   roma:'Kouen wa kirei desu.',                       ru:'Парк красивый.' },
+  ]},
+  { emoji:'🌅', title:'わたしの あさ', titleRu:'Моё утро', sentences:[
+    { jp:'まいあさ、ろくじに おきます。',             roma:'Maiasa, roku-ji ni okimasu.',                ru:'Каждое утро я встаю в шесть часов.' },
+    { jp:'あさごはんは パンと コーヒーです。',        roma:'Asagohan wa pan to koohii desu.',            ru:'На завтрак — хлеб и кофе.' },
+    { jp:'でんしゃで がっこうへ いきます。',          roma:'Densha de gakkou e ikimasu.',                ru:'В школу еду на поезде.' },
+    { jp:'きょうは いそがしいです。',                 roma:'Kyou wa isogashii desu.',                    ru:'Сегодня я занята.' },
+  ]},
+  { emoji:'🍣', title:'レストランで', titleRu:'В ресторане', sentences:[
+    { jp:'ともだちと レストランへ いきます。',        roma:'Tomodachi to resutoran e ikimasu.',           ru:'Иду в ресторан с подругой.' },
+    { jp:'メニューを みます。',                       roma:'Menyuu o mimasu.',                           ru:'Смотрю меню.' },
+    { jp:'すしと みずを ちゅうもんします。',          roma:'Sushi to mizu o chuumon shimasu.',           ru:'Заказываю суши и воду.' },
+    { jp:'とても おいしいです！',                     roma:'Totemo oishii desu!',                        ru:'Очень вкусно!' },
+    { jp:'ありがとうございます。',                    roma:'Arigatou gozaimasu.',                        ru:'Спасибо.' },
+  ]},
+  { emoji:'🎵', title:'しゅみ', titleRu:'Хобби', sentences:[
+    { jp:'わたしの しゅみは おんがくと りょこうです。',roma:'Watashi no shumi wa ongaku to ryokou desu.', ru:'Мои хобби — музыка и путешествия.' },
+    { jp:'まいにち おんがくを ききます。',            roma:'Mainichi ongaku o kikimasu.',                ru:'Каждый день слушаю музыку.' },
+    { jp:'しゅうまつは えいがを みます。',            roma:'Shuumatsu wa eiga o mimasu.',                ru:'По выходным смотрю кино.' },
+    { jp:'らいしゅう にほんへ いきます。',            roma:'Raishuu nihon e ikimasu.',                   ru:'На следующей неделе еду в Японию.' },
+  ]},
+  { emoji:'👗', title:'ふく', titleRu:'Одежда', sentences:[
+    { jp:'きょうは あたらしい コートを きます。',     roma:'Kyou wa atarashii kooto o kimasu.',           ru:'Сегодня надеваю новое пальто.' },
+    { jp:'あおい スカートも かわいいです。',          roma:'Aoi sukaato mo kawaii desu.',                 ru:'Синяя юбка тоже милая.' },
+    { jp:'デパートで くつを かいます。',              roma:'Depaato de kutsu o kaimasu.',                 ru:'Куплю обувь в универмаге.' },
+    { jp:'やすくて いいです。',                       roma:'Yasukute ii desu.',                          ru:'Дёшево и хорошо.' },
+  ]},
+  { emoji:'🕐', title:'じかん', titleRu:'Время', sentences:[
+    { jp:'いまは ごごさんじです。',                   roma:'Ima wa gogo san-ji desu.',                   ru:'Сейчас три часа дня.' },
+    { jp:'きょうは いそがしかったです。',             roma:'Kyou wa isogashikatta desu.',                ru:'Сегодня была занята.' },
+    { jp:'よるは えいがを みます。',                  roma:'Yoru wa eiga o mimasu.',                     ru:'Вечером смотрю кино.' },
+    { jp:'あしたは しゅうまつです。たのしみです！',   roma:'Ashita wa shuumatsu desu. Tanoshimi desu!',  ru:'Завтра выходные. Жду не дождусь!' },
+  ]},
+  { emoji:'🏠', title:'わたしの うち', titleRu:'Мой дом', sentences:[
+    { jp:'わたしの うちは えきから ちかいです。',     roma:'Watashi no uchi wa eki kara chikai desu.',   ru:'Мой дом близко от станции.' },
+    { jp:'へやは ちいさいですが、きれいです。',       roma:'Heya wa chiisai desu ga, kirei desu.',       ru:'Комната маленькая, но красивая.' },
+    { jp:'となりに こうえんが あります。',            roma:'Tonari ni kouen ga arimasu.',                ru:'Рядом есть парк.' },
+    { jp:'すきな まちです。',                         roma:'Suki na machi desu.',                        ru:'Мне нравится этот район.' },
+  ]},
+];
+
+// reading state
+let rdShowRoma = false;
+let rdShowRu   = false;
+
+function renderReadingList() {
+  document.getElementById('reading-content').innerHTML = `
+    <div class="text-grid">
+      ${TEXTS.map((t, i) => `
+        <div class="text-card" onclick="openText(${i})">
+          <div class="tc-emoji">${t.emoji}</div>
+          <div class="tc-title">${t.title}</div>
+          <div class="tc-titleru">${t.titleRu}</div>
+          <div class="tc-preview">${t.sentences[0].jp}</div>
+        </div>`).join('')}
+    </div>`;
+}
+
+function openText(idx) {
+  rdShowRoma = false;
+  rdShowRu   = false;
+  const t = TEXTS[idx];
+  const allJp = t.sentences.map(s => s.jp).join('　');
+
+  const sentences = t.sentences.map((s, i) => `
+    <div class="rd-sentence" id="rds-${i}">
+      <div class="rd-jp-row">
+        <div class="rd-jp">${s.jp}</div>
+        <button class="rd-spk" onclick="speak('${s.jp.replace(/'/g,"\\'")}')">🔊</button>
+      </div>
+      <div class="rd-roma">${s.roma}</div>
+      <div class="rd-ru">${s.ru}</div>
+    </div>`).join('');
+
+  document.getElementById('reading-content').innerHTML = `
+    <button class="rd-back" onclick="renderReadingList()">← Все тексты</button>
+    <div class="rd-header">
+      <span style="font-size:1.8rem">${t.emoji}</span>
+      <span class="rd-title">${t.title}</span>
+      <span class="rd-titleru">${t.titleRu}</span>
+    </div>
+    <div class="rd-controls">
+      <button class="rd-toggle" id="rd-spk-all" onclick="speakAll(${idx})">🔊 Читать всё</button>
+      <button class="rd-toggle" id="rd-roma-btn" onclick="rdToggle('roma')">Ромадзи</button>
+      <button class="rd-toggle" id="rd-ru-btn"   onclick="rdToggle('ru')">Перевод</button>
+    </div>
+    <div class="rd-sentences" id="rd-sentences">${sentences}</div>
+  `;
+}
+
+function rdToggle(type) {
+  if (type === 'roma') {
+    rdShowRoma = !rdShowRoma;
+    document.getElementById('rd-roma-btn').className = 'rd-toggle' + (rdShowRoma ? ' on' : '');
+  } else {
+    rdShowRu = !rdShowRu;
+    document.getElementById('rd-ru-btn').className = 'rd-toggle' + (rdShowRu ? ' on' : '');
+  }
+  document.getElementById('rd-sentences').className =
+    'rd-sentences' + (rdShowRoma ? ' show-roma' : '') + (rdShowRu ? ' show-ru' : '');
+}
+
+function speakAll(textIdx) {
+  const sentences = TEXTS[textIdx].sentences.map(s => s.jp);
+  window.speechSynthesis.cancel();
+  let i = 0;
+  function next() {
+    if (i >= sentences.length) return;
+    const utt = new SpeechSynthesisUtterance(sentences[i++]);
+    utt.lang = 'ja-JP';
+    utt.rate = 0.85;
+    utt.onend = () => setTimeout(next, 400);
+    window.speechSynthesis.speak(utt);
+  }
+  next();
 }
 
 // ═══════════════════════════════════════════════
