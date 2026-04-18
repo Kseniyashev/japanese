@@ -537,6 +537,8 @@
     <div class="vocab-mode-row">
       <button class="vmode-btn active" id="vmode-study" onclick="setVocabMode('study')">Карточки</button>
       <button class="vmode-btn"        id="vmode-quiz"  onclick="setVocabMode('quiz')">Тест</button>
+      <div style="width:1px;background:var(--border);margin:4px 4px"></div>
+      <button class="vmode-btn" id="vmode-reverse" onclick="toggleVocabReverse()" title="Обратный режим: японский → русский">RU→JP</button>
     </div>
     <div class="vocab-area" id="vocab-area"></div>
   </section>
@@ -1480,9 +1482,20 @@ const VOCAB_TOPICS = [
   ]},
 ];
 
+// ── TTS ──
+function speak(text) {
+  if (!window.speechSynthesis) return;
+  window.speechSynthesis.cancel();
+  const utt = new SpeechSynthesisUtterance(text);
+  utt.lang = 'ja-JP';
+  utt.rate = 0.85;
+  window.speechSynthesis.speak(utt);
+}
+
 // vocab state
-let vTopicIdx  = 0;
+let vTopicIdx  = 0;   // -1 = все темы
 let vMode      = 'study'; // 'study' | 'quiz'
+let vReverse   = false;   // false = RU→JP, true = JP→RU
 let vDeck      = [];
 let vIdx       = 0;
 let vFlipped   = false;
@@ -1495,9 +1508,11 @@ function initVocab() {
 }
 
 function renderVocabTopicsBar() {
-  document.getElementById('vocab-topics-bar').innerHTML = VOCAB_TOPICS.map((t, i) => `
+  const allBtn = `<button class="vtopic-btn ${vTopicIdx === -1 ? 'active' : ''}" onclick="setVocabTopic(-1)">Все темы</button>`;
+  const topicBtns = VOCAB_TOPICS.map((t, i) => `
     <button class="vtopic-btn ${i === vTopicIdx ? 'active' : ''}" onclick="setVocabTopic(${i})">${t.label}</button>
   `).join('');
+  document.getElementById('vocab-topics-bar').innerHTML = allBtn + topicBtns;
 }
 
 function setVocabTopic(idx) {
@@ -1513,9 +1528,21 @@ function setVocabMode(mode) {
   buildVocabDeck();
 }
 
+function toggleVocabReverse() {
+  vReverse = !vReverse;
+  const btn = document.getElementById('vmode-reverse');
+  btn.textContent = vReverse ? 'JP→RU' : 'RU→JP';
+  btn.className = 'vmode-btn' + (vReverse ? ' active' : '');
+  vFlipped = false;
+  renderVocabCard();
+}
+
 function buildVocabDeck() {
-  vDeck    = [...VOCAB_TOPICS[vTopicIdx].words].sort(() => Math.random() - 0.5);
-  vIdx     = 0; vFlipped = false; vScore = 0; vTotal = 0;
+  const words = vTopicIdx === -1
+    ? VOCAB_TOPICS.flatMap(t => t.words)
+    : VOCAB_TOPICS[vTopicIdx].words;
+  vDeck = [...words].sort(() => Math.random() - 0.5);
+  vIdx = 0; vFlipped = false; vScore = 0; vTotal = 0;
   renderVocabCard();
 }
 
@@ -1526,7 +1553,7 @@ function renderVocabCard() {
   if (vIdx >= vDeck.length) {
     area.innerHTML = `<div class="done-screen">
       <div class="big-emoji">✨</div>
-      <h2>Тема пройдена!</h2>
+      <h2>Готово!</h2>
       <p>${vMode === 'quiz' ? `Результат: <strong>${vScore}</strong> из ${vTotal}` : `Слов в колоде: ${vDeck.length}`}</p>
       <button class="btn-primary" onclick="buildVocabDeck()">↺ Ещё раз</button>
     </div>`;
@@ -1534,20 +1561,31 @@ function renderVocabCard() {
   }
 
   const w = vDeck[vIdx];
+  // front/back depends on vReverse
+  const frontJp = vReverse;  // true → front is Japanese
+  const speakBtn = `<button onclick="event.stopPropagation();speak('${w.jp.replace(/'/g,"\\'")}');" style="background:none;border:none;cursor:pointer;font-size:1.3rem;margin-top:10px;opacity:0.6" title="Озвучить">🔊</button>`;
+
+  // speaker visible when Japanese side is showing
+  const jpVisible = frontJp ? !vFlipped : vFlipped;
 
   if (vMode === 'study') {
+    let cardInner;
+    if (!vFlipped) {
+      // front side
+      cardInner = frontJp
+        ? `<div class="vc-jp">${w.jp}</div><div class="vc-roma">${w.roma}</div><div class="vc-hint">Нажми, чтобы увидеть перевод</div>`
+        : `<div class="vc-ru">${w.ru}</div><div class="vc-hint">Нажми, чтобы увидеть по-японски</div>`;
+    } else {
+      // back side
+      cardInner = frontJp
+        ? `<div class="vc-ru">${w.ru}</div><div class="vc-ru2">${w.jp} · ${w.roma}</div>`
+        : `<div class="vc-jp">${w.jp}</div><div class="vc-roma">${w.roma}</div><div class="vc-ru2">${w.ru}</div>`;
+    }
+
     area.innerHTML = `
       <div style="font-size:0.82rem;color:var(--muted)">${vIdx + 1} / ${vDeck.length}</div>
-      <div class="vocab-card" onclick="vFlip()">
-        ${!vFlipped ? `
-          <div class="vc-ru">${w.ru}</div>
-          <div class="vc-hint">Нажми, чтобы увидеть по-японски</div>
-        ` : `
-          <div class="vc-jp">${w.jp}</div>
-          <div class="vc-roma">${w.roma}</div>
-          <div class="vc-ru2">${w.ru}</div>
-        `}
-      </div>
+      <div class="vocab-card" onclick="vFlip()">${cardInner}</div>
+      ${jpVisible ? speakBtn : ''}
       ${vFlipped ? `
         <div class="card-actions">
           <button class="btn-study" onclick="vRate(false)">Ещё учу</button>
@@ -1555,23 +1593,42 @@ function renderVocabCard() {
         </div>` : '<div style="height:52px"></div>'}
     `;
   } else {
-    // quiz mode — 4 options
+    // quiz mode
     const allWords = VOCAB_TOPICS.flatMap(t => t.words);
     const distractors = allWords.filter(x => x.jp !== w.jp).sort(() => Math.random() - 0.5).slice(0, 3);
     const opts = [...distractors, w].sort(() => Math.random() - 0.5);
 
-    area.innerHTML = `
-      <div style="font-size:0.82rem;color:var(--muted)">${vIdx + 1} / ${vDeck.length} &nbsp;·&nbsp; ✓ ${vScore}</div>
-      <div class="vocab-card" style="cursor:default;min-height:120px">
-        <div class="vc-ru">${w.ru}</div>
-      </div>
-      <div class="quiz-opts">
-        ${opts.map(o => `
-          <div class="quiz-opt" onclick="vQuizPick(this, '${o.jp}', '${w.jp}')">
-            ${o.jp}<span class="qroma">${o.roma}</span>
-          </div>`).join('')}
-      </div>
-    `;
+    if (!vReverse) {
+      // normal: show RU → pick JP
+      area.innerHTML = `
+        <div style="font-size:0.82rem;color:var(--muted)">${vIdx + 1} / ${vDeck.length} &nbsp;·&nbsp; ✓ ${vScore}</div>
+        <div class="vocab-card" style="cursor:default;min-height:120px">
+          <div class="vc-ru">${w.ru}</div>
+        </div>
+        <div class="quiz-opts">
+          ${opts.map(o => `
+            <div class="quiz-opt" onclick="vQuizPick(this, '${o.jp}', '${w.jp}')">
+              ${o.jp}<span class="qroma">${o.roma}</span>
+            </div>`).join('')}
+        </div>
+      `;
+    } else {
+      // reverse: show JP → pick RU
+      area.innerHTML = `
+        <div style="font-size:0.82rem;color:var(--muted)">${vIdx + 1} / ${vDeck.length} &nbsp;·&nbsp; ✓ ${vScore}</div>
+        <div class="vocab-card" style="cursor:default;min-height:120px">
+          <div class="vc-jp">${w.jp}</div>
+          <div class="vc-roma">${w.roma}</div>
+          ${speakBtn}
+        </div>
+        <div class="quiz-opts">
+          ${opts.map(o => `
+            <div class="quiz-opt" onclick="vQuizPick(this, '${o.jp}', '${w.jp}')">
+              ${o.ru}
+            </div>`).join('')}
+        </div>
+      `;
+    }
   }
 }
 
@@ -1600,7 +1657,7 @@ function vQuizPick(el, picked, correct) {
   } else {
     el.classList.add('wrong');
     document.querySelectorAll('.quiz-opt').forEach(o => {
-      if (o.textContent.trim().startsWith(correct)) o.classList.add('correct');
+      if (o.getAttribute('onclick') && o.getAttribute('onclick').includes(`'${correct}'`)) o.classList.add('correct');
     });
     setTimeout(() => { vIdx++; renderVocabCard(); }, 1500);
   }
