@@ -347,6 +347,81 @@
     .done-screen h2 { font-size: 1.8rem; font-weight: 800; margin-bottom: 10px; }
     .done-screen p  { color: var(--muted); margin-bottom: 24px; font-size: 1rem; }
 
+    /* ── Numbers ── */
+    .num-grid { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 28px; }
+    .num-card {
+      background: var(--white); border-radius: 12px; border: 2px solid var(--border);
+      padding: 14px 8px; text-align: center; min-width: 72px; flex: 1; max-width: 90px;
+      box-shadow: var(--shadow);
+    }
+    .num-digit { font-size: 1.6rem; font-weight: 800; color: var(--red); }
+    .num-jp    { font-size: 1.05rem; margin: 5px 0 3px; }
+    .num-roma  { font-size: 0.7rem; color: var(--muted); font-weight: 700; }
+    .num-rule {
+      background: var(--white); border-radius: var(--radius); border: 1px solid var(--border);
+      padding: 16px 20px; margin-bottom: 20px; font-size: 0.88rem; line-height: 1.8;
+    }
+    .num-rule strong { color: var(--red); }
+    .num-rule code { background: var(--bg); padding: 1px 6px; border-radius: 4px; font-size: 0.9em; }
+    .suffix-table { width: 100%; border-collapse: collapse; border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); }
+    .suffix-table th { background: var(--red); color: white; padding: 10px 14px; font-size: 0.82rem; text-align: left; }
+    .suffix-table td { padding: 10px 14px; border-bottom: 1px solid var(--border); font-size: 0.88rem; background: var(--white); vertical-align: top; }
+    .suffix-table tr:last-child td { border-bottom: none; }
+    .suffix-jp { font-size: 1.1rem; }
+
+    /* ── Particles ── */
+    .particle-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 14px; }
+    .particle-card { background: var(--white); border-radius: var(--radius); border: 2px solid var(--border); padding: 20px; box-shadow: var(--shadow); }
+    .pc-char { font-size: 2.8rem; font-weight: 800; color: var(--red); line-height: 1; }
+    .pc-roma { font-size: 0.78rem; font-weight: 700; color: var(--muted); margin: 4px 0 8px; }
+    .pc-ru   { font-size: 1rem; font-weight: 700; margin-bottom: 8px; }
+    .pc-rule { font-size: 0.82rem; color: var(--muted); line-height: 1.55; margin-bottom: 12px; }
+    .pc-ex   { background: var(--bg); border-radius: 8px; padding: 10px 12px; font-size: 0.85rem; line-height: 1.6; }
+    .pc-ex .jp   { font-size: 1rem; }
+    .pc-ex .roma { font-size: 0.73rem; color: var(--muted); }
+    .pc-ex .ru   { font-size: 0.8rem; color: var(--red); margin-top: 2px; font-weight: 600; }
+
+    /* ── Vocabulary ── */
+    .vocab-topics { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+    .vtopic-btn {
+      padding: 7px 15px; border-radius: 99px; border: 2px solid var(--border);
+      background: var(--white); cursor: pointer; font-size: 0.82rem; font-weight: 600;
+      transition: all .16s; color: var(--muted); white-space: nowrap;
+    }
+    .vtopic-btn.active { border-color: var(--red); color: var(--red); background: var(--red-light); }
+    .vocab-mode-row { display: flex; gap: 8px; margin-bottom: 20px; }
+    .vmode-btn {
+      padding: 8px 22px; border-radius: 99px; border: 2px solid var(--border);
+      background: var(--white); cursor: pointer; font-size: 0.85rem; font-weight: 700;
+      transition: all .16s; color: var(--muted);
+    }
+    .vmode-btn.active { border-color: var(--red); background: var(--red); color: white; }
+    .vocab-area { display: flex; flex-direction: column; align-items: center; gap: 20px; }
+    .vocab-card {
+      width: 100%; max-width: 420px; min-height: 190px;
+      background: var(--white); border-radius: 22px; border: 2px solid var(--border);
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      cursor: pointer; transition: all .25s; box-shadow: 0 6px 28px rgba(0,0,0,0.08);
+      padding: 32px 24px; user-select: none; text-align: center;
+    }
+    .vocab-card:hover { box-shadow: 0 10px 40px rgba(0,0,0,0.12); }
+    .vc-ru   { font-size: 2rem; font-weight: 800; }
+    .vc-hint { font-size: 0.82rem; color: var(--muted); margin-top: 10px; }
+    .vc-jp   { font-size: 2rem; margin-bottom: 6px; }
+    .vc-roma { font-size: 1rem; font-weight: 700; color: var(--red); }
+    .vc-ru2  { font-size: 0.88rem; color: var(--muted); margin-top: 4px; }
+    .quiz-opts { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; max-width: 500px; width: 100%; }
+    .quiz-opt {
+      padding: 14px 12px; border-radius: 12px; border: 2px solid var(--border);
+      background: var(--white); cursor: pointer; font-size: 1rem; text-align: center;
+      transition: all .16s; line-height: 1.3;
+    }
+    .quiz-opt:hover:not(.disabled) { border-color: var(--red-mid); background: var(--red-light); }
+    .quiz-opt.correct  { border-color: var(--green); background: var(--green-light); }
+    .quiz-opt.wrong    { border-color: var(--red-mid); background: var(--red-light); }
+    .quiz-opt.disabled { cursor: default; }
+    .quiz-opt .qroma   { font-size: 0.7rem; color: var(--muted); display: block; margin-top: 2px; }
+
     /* ── Responsive ── */
     @media (max-width: 620px) {
       nav .tab-btn span { display: none; }
@@ -368,6 +443,9 @@
     <button class="tab-btn" onclick="showSection('flashcards')">Карточки</button>
     <button class="tab-btn" onclick="showSection('words')">Слова</button>
     <button class="tab-btn" onclick="showSection('kanji')">Кандзи</button>
+    <button class="tab-btn" onclick="showSection('numbers')">Числа</button>
+    <button class="tab-btn" onclick="showSection('particles')">Частицы</button>
+    <button class="tab-btn" onclick="showSection('vocab')">Словарь</button>
   </nav>
 </header>
 
@@ -435,6 +513,32 @@
     <h1 class="section-title">Базовые кандзи</h1>
     <p class="section-desc">20 самых простых иероглифов — числа, природа, базовые понятия. Нажми, чтобы узнать чтение и значение.</p>
     <div class="kanji-grid" id="kanji-grid"></div>
+  </section>
+
+  <!-- ══════════ NUMBERS ══════════ -->
+  <section id="numbers" class="section">
+    <h1 class="section-title">Числа</h1>
+    <p class="section-desc">Японские числа, счётная система и суффиксы.</p>
+    <div id="numbers-content"></div>
+  </section>
+
+  <!-- ══════════ PARTICLES ══════════ -->
+  <section id="particles" class="section">
+    <h1 class="section-title">Частицы</h1>
+    <p class="section-desc">Частицы — основа японской грамматики. Они показывают роль слова в предложении.</p>
+    <div class="particle-grid" id="particle-grid"></div>
+  </section>
+
+  <!-- ══════════ VOCABULARY ══════════ -->
+  <section id="vocab" class="section">
+    <h1 class="section-title">Словарь</h1>
+    <p class="section-desc">Лексика по темам из базового курса. Учи в режиме карточек или проверяй себя в тесте.</p>
+    <div id="vocab-topics-bar" class="vocab-topics"></div>
+    <div class="vocab-mode-row">
+      <button class="vmode-btn active" id="vmode-study" onclick="setVocabMode('study')">Карточки</button>
+      <button class="vmode-btn"        id="vmode-quiz"  onclick="setVocabMode('quiz')">Тест</button>
+    </div>
+    <div class="vocab-area" id="vocab-area"></div>
   </section>
 
 </main>
@@ -712,7 +816,7 @@ function saveMastered() {
 // ═══════════════════════════════════════════════
 // NAVIGATION
 // ═══════════════════════════════════════════════
-const SECTION_LABELS = { alphabet:'Алфавит', flashcards:'Карточки', words:'Слова', kanji:'Кандзи' };
+const SECTION_LABELS = { alphabet:'Алфавит', flashcards:'Карточки', words:'Слова', kanji:'Кандзи', numbers:'Числа', particles:'Частицы', vocab:'Словарь' };
 
 function showSection(id) {
   document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
@@ -722,7 +826,10 @@ function showSection(id) {
   });
   if (id === 'flashcards' && fcDeck.length === 0) buildDeck();
   if (id === 'words'      && wWords.length === 0)  initWords();
-  if (id === 'kanji')                               renderKanji();
+  if (id === 'kanji')     renderKanji();
+  if (id === 'numbers')   renderNumbers();
+  if (id === 'particles') renderParticles();
+  if (id === 'vocab')     initVocab();
 }
 
 // ═══════════════════════════════════════════════
@@ -1088,6 +1195,415 @@ function renderKanji() {
       <div class="kanji-meaning">${k.ru}</div>
     </div>
   `).join('');
+}
+
+// ═══════════════════════════════════════════════
+// NUMBERS DATA & RENDER
+// ═══════════════════════════════════════════════
+const NUMS_BASIC = [
+  { n:0,  jp:'れい / ゼロ', roma:'rei / zero' },
+  { n:1,  jp:'いち',        roma:'ichi' },
+  { n:2,  jp:'に',          roma:'ni' },
+  { n:3,  jp:'さん',        roma:'san' },
+  { n:4,  jp:'し / よん',   roma:'shi / yon' },
+  { n:5,  jp:'ご',          roma:'go' },
+  { n:6,  jp:'ろく',        roma:'roku' },
+  { n:7,  jp:'しち / なな', roma:'shichi / nana' },
+  { n:8,  jp:'はち',        roma:'hachi' },
+  { n:9,  jp:'く / きゅう', roma:'ku / kyuu' },
+  { n:10, jp:'じゅう',      roma:'juu' },
+];
+
+const NUMS_NATIVE = [
+  { n:'1つ', jp:'ひとつ', roma:'hitotsu' }, { n:'2つ', jp:'ふたつ', roma:'futatsu' },
+  { n:'3つ', jp:'みっつ', roma:'mittsu'  }, { n:'4つ', jp:'よっつ', roma:'yottsu'  },
+  { n:'5つ', jp:'いつつ', roma:'itsutsu' }, { n:'6つ', jp:'むっつ', roma:'muttsu'  },
+  { n:'7つ', jp:'ななつ', roma:'nanatsu' }, { n:'8つ', jp:'やっつ', roma:'yattsu'  },
+  { n:'9つ', jp:'ここのつ',roma:'kokonotsu'},{ n:'10',  jp:'とお',   roma:'too'     },
+];
+
+const SUFFIXES = [
+  { suf:'〜本 (ほん)', roma:'~hon', ru:'длинные тонкие предметы', ex:'えんぴつ いっぽん — один карандаш' },
+  { suf:'〜枚 (まい)', roma:'~mai', ru:'плоские предметы', ex:'かみ にまい — два листа бумаги' },
+  { suf:'〜個 (こ)',   roma:'~ko',  ru:'небольшие предметы', ex:'りんご さんこ — три яблока' },
+  { suf:'〜冊 (さつ)', roma:'~satsu', ru:'книги, тетради', ex:'ほん いっさつ — одна книга' },
+  { suf:'〜杯 (はい)', roma:'~hai', ru:'чашки, стаканы', ex:'みず いっぱい — стакан воды' },
+  { suf:'〜台 (だい)', roma:'~dai', ru:'машины, техника', ex:'くるま いちだい — одна машина' },
+  { suf:'〜匹 (ひき)', roma:'~hiki', ru:'мелкие животные', ex:'ねこ にひき — две кошки' },
+  { suf:'〜頭 (とう)', roma:'~tou', ru:'крупные животные', ex:'うし さんとう — три коровы' },
+  { suf:'〜人 (にん)', roma:'~nin', ru:'люди', ex:'ひとり / ふたり (1–2), さんにん (3+)' },
+  { suf:'〜階 (かい)', roma:'~kai', ru:'этажи', ex:'さんかい — третий этаж' },
+];
+
+function renderNumbers() {
+  const el = document.getElementById('numbers-content');
+  const basicCards = NUMS_BASIC.map(n => `
+    <div class="num-card">
+      <div class="num-digit">${n.n}</div>
+      <div class="num-jp">${n.jp}</div>
+      <div class="num-roma">${n.roma}</div>
+    </div>`).join('');
+
+  const nativeCards = NUMS_NATIVE.map(n => `
+    <div class="num-card">
+      <div class="num-digit" style="font-size:1.1rem">${n.n}</div>
+      <div class="num-jp">${n.jp}</div>
+      <div class="num-roma">${n.roma}</div>
+    </div>`).join('');
+
+  const suffixRows = SUFFIXES.map(s => `
+    <tr>
+      <td><span class="suffix-jp">${s.suf}</span></td>
+      <td>${s.roma}</td>
+      <td>${s.ru}</td>
+      <td style="color:var(--muted);font-size:0.82rem">${s.ex}</td>
+    </tr>`).join('');
+
+  el.innerHTML = `
+    <h2 class="section-title" style="font-size:1.15rem;margin-bottom:12px">0–10</h2>
+    <div class="num-grid">${basicCards}</div>
+
+    <div class="num-rule">
+      <strong>Как образуются числа 11–99:</strong><br>
+      <code>じゅう</code> + цифра: 11 = じゅういち, 12 = じゅうに, 20 = にじゅう, 35 = さんじゅうご<br><br>
+      <strong>Сотни и тысячи:</strong><br>
+      100 = <code>ひゃく</code>, 200 = にひゃく, 300 = <strong>さんびゃく</strong>, 600 = <strong>ろっぴゃく</strong>, 800 = <strong>はっぴゃく</strong><br>
+      1000 = <code>せん</code>, 2000 = にせん, 3000 = <strong>さんぜん</strong>, 8000 = <strong>はっせん</strong><br>
+      10 000 = <code>いちまん</code>
+    </div>
+
+    <h2 class="section-title" style="font-size:1.15rem;margin-bottom:12px">Японский счёт (ひとつ〜とお)</h2>
+    <p style="color:var(--muted);font-size:0.85rem;margin-bottom:12px">Используется для счёта предметов в общем случае (когда не знаешь суффикс)</p>
+    <div class="num-grid">${nativeCards}</div>
+
+    <h2 class="section-title" style="font-size:1.15rem;margin:8px 0 12px">Счётные суффиксы</h2>
+    <table class="suffix-table">
+      <thead><tr><th>Суффикс</th><th>Ромадзи</th><th>Что считает</th><th>Пример</th></tr></thead>
+      <tbody>${suffixRows}</tbody>
+    </table>
+  `;
+}
+
+// ═══════════════════════════════════════════════
+// PARTICLES DATA & RENDER
+// ═══════════════════════════════════════════════
+const PARTICLES_DATA = [
+  { p:'は', roma:'wa', ru:'тема предложения',
+    rule:'Отмечает главную тему/подлежащее. Пишется は, но читается «ва».',
+    jp:'わたしは がくせいです。', exRoma:'Watashi wa gakusei desu.', exRu:'Я — студент.' },
+  { p:'が', roma:'ga', ru:'подлежащее (акцент)',
+    rule:'Выделяет именно это слово как субъект действия. Отвечает на «кто именно?».',
+    jp:'ねこが います。', exRoma:'Neko ga imasu.', exRu:'(Вот) кошка.' },
+  { p:'を', roma:'wo/o', ru:'прямое дополнение',
+    rule:'Отмечает объект действия (что/кого делают). Читается «о».',
+    jp:'すしを たべます。', exRoma:'Sushi o tabemasu.', exRu:'Я ем суши.' },
+  { p:'に', roma:'ni', ru:'направление, время, место',
+    rule:'Куда (движение), когда (время), где существует (に います/あります).',
+    jp:'えきに いきます。', exRoma:'Eki ni ikimasu.', exRu:'Иду на станцию.' },
+  { p:'で', roma:'de', ru:'место действия, средство',
+    rule:'Где происходит действие, на чём/чем делают.',
+    jp:'バスで いきます。', exRoma:'Basu de ikimasu.', exRu:'Еду на автобусе.' },
+  { p:'の', roma:'no', ru:'притяжательность, принадлежность',
+    rule:'А の B = «Б-шный А», «Б из А». Как апостроф-s в английском, но порядок обратный.',
+    jp:'わたしの ほん。', exRoma:'Watashi no hon.', exRu:'Моя книга.' },
+  { p:'と', roma:'to', ru:'«и» (перечисление), «с» (вместе)',
+    rule:'Перечисляет конкретные предметы или указывает на компанию.',
+    jp:'ともだちと いきます。', exRoma:'Tomodachi to ikimasu.', exRu:'Иду с другом.' },
+  { p:'も', roma:'mo', ru:'«тоже», «тоже не»',
+    rule:'Заменяет は или が, добавляя значение «тоже». С отрицанием: «ни...тоже».',
+    jp:'わたしも がくせいです。', exRoma:'Watashi mo gakusei desu.', exRu:'Я тоже студент.' },
+  { p:'か', roma:'ka', ru:'вопросительная частица',
+    rule:'Ставится в конце предложения — делает его вопросом. Знак вопроса не нужен.',
+    jp:'にほんごが わかりますか？', exRoma:'Nihongo ga wakarimasu ka?', exRu:'Вы понимаете японский?' },
+  { p:'へ', roma:'e', ru:'направление (движение)',
+    rule:'Похожа на に для направления, но акцент на «в сторону». Пишется へ, читается «э».',
+    jp:'にほんへ いきます。', exRoma:'Nihon e ikimasu.', exRu:'Еду в Японию.' },
+];
+
+function renderParticles() {
+  document.getElementById('particle-grid').innerHTML = PARTICLES_DATA.map(p => `
+    <div class="particle-card">
+      <div class="pc-char">${p.p}</div>
+      <div class="pc-roma">${p.roma}</div>
+      <div class="pc-ru">${p.ru}</div>
+      <div class="pc-rule">${p.rule}</div>
+      <div class="pc-ex">
+        <div class="jp">${p.jp}</div>
+        <div class="roma">${p.exRoma}</div>
+        <div class="ru">${p.exRu}</div>
+      </div>
+    </div>`).join('');
+}
+
+// ═══════════════════════════════════════════════
+// VOCABULARY DATA & LOGIC
+// ═══════════════════════════════════════════════
+const VOCAB_TOPICS = [
+  { id:'greet', label:'Приветствия', words:[
+    { jp:'こんにちは',         roma:'konnichiwa',        ru:'Добрый день' },
+    { jp:'おはようございます', roma:'ohayou gozaimasu',  ru:'Доброе утро' },
+    { jp:'こんばんは',         roma:'konbanwa',           ru:'Добрый вечер' },
+    { jp:'さようなら',         roma:'sayounara',          ru:'До свидания' },
+    { jp:'ありがとうございます',roma:'arigatou gozaimasu',ru:'Спасибо' },
+    { jp:'すみません',         roma:'sumimasen',          ru:'Извините' },
+    { jp:'はじめまして',       roma:'hajimemashite',      ru:'Приятно познакомиться' },
+    { jp:'どうぞ',             roma:'douzo',              ru:'Пожалуйста (предлагая)' },
+    { jp:'はい',               roma:'hai',                ru:'Да' },
+    { jp:'いいえ',             roma:'iie',                ru:'Нет' },
+  ]},
+  { id:'self', label:'О себе', words:[
+    { jp:'わたし',   roma:'watashi',    ru:'я' },
+    { jp:'なまえ',   roma:'namae',      ru:'имя' },
+    { jp:'がくせい', roma:'gakusei',    ru:'студент' },
+    { jp:'せんせい', roma:'sensei',     ru:'учитель' },
+    { jp:'かいしゃいん', roma:'kaishain', ru:'офисный работник' },
+    { jp:'いしゃ',   roma:'isha',       ru:'врач' },
+    { jp:'にほんご', roma:'nihongo',    ru:'японский язык' },
+    { jp:'すき',     roma:'suki',       ru:'нравится' },
+    { jp:'きらい',   roma:'kirai',      ru:'не нравится' },
+    { jp:'～さい',   roma:'~sai',       ru:'…лет (возраст)' },
+  ]},
+  { id:'places', label:'Места', words:[
+    { jp:'がっこう',     roma:'gakkou',   ru:'школа' },
+    { jp:'びょういん',   roma:'byouin',   ru:'больница' },
+    { jp:'えき',         roma:'eki',      ru:'станция' },
+    { jp:'スーパー',     roma:'suupaa',   ru:'супермаркет' },
+    { jp:'レストラン',   roma:'resutoran',ru:'ресторан' },
+    { jp:'ぎんこう',     roma:'ginkou',   ru:'банк' },
+    { jp:'こうえん',     roma:'kouen',    ru:'парк' },
+    { jp:'デパート',     roma:'depaato',  ru:'универмаг' },
+    { jp:'トイレ',       roma:'toire',    ru:'туалет' },
+    { jp:'ほんや',       roma:'honya',    ru:'книжный магазин' },
+  ]},
+  { id:'food', label:'Еда', words:[
+    { jp:'みず',   roma:'mizu',    ru:'вода' },
+    { jp:'おちゃ', roma:'ocha',    ru:'чай' },
+    { jp:'コーヒー',roma:'koohii', ru:'кофе' },
+    { jp:'ラーメン',roma:'raamen', ru:'рамен' },
+    { jp:'すし',   roma:'sushi',   ru:'суши' },
+    { jp:'ごはん', roma:'gohan',   ru:'рис / еда' },
+    { jp:'パン',   roma:'pan',     ru:'хлеб / булочка' },
+    { jp:'たまご', roma:'tamago',  ru:'яйцо' },
+    { jp:'さかな', roma:'sakana',  ru:'рыба' },
+    { jp:'にく',   roma:'niku',    ru:'мясо' },
+    { jp:'やさい', roma:'yasai',   ru:'овощи' },
+    { jp:'メニュー',roma:'menyuu', ru:'меню' },
+  ]},
+  { id:'transport', label:'Транспорт', words:[
+    { jp:'でんしゃ',   roma:'densha',     ru:'поезд' },
+    { jp:'バス',       roma:'basu',       ru:'автобус' },
+    { jp:'タクシー',   roma:'takushii',   ru:'такси' },
+    { jp:'ちかてつ',   roma:'chikatetsu', ru:'метро' },
+    { jp:'ひこうき',   roma:'hikouki',    ru:'самолёт' },
+    { jp:'じてんしゃ', roma:'jitensha',   ru:'велосипед' },
+    { jp:'くるま',     roma:'kuruma',     ru:'машина' },
+    { jp:'ふね',       roma:'fune',       ru:'корабль' },
+    { jp:'のる',       roma:'noru',       ru:'садиться (в транспорт)' },
+    { jp:'おりる',     roma:'oriru',      ru:'выходить (из транспорта)' },
+  ]},
+  { id:'hobby', label:'Хобби', words:[
+    { jp:'おんがく', roma:'ongaku',   ru:'музыка' },
+    { jp:'えいが',   roma:'eiga',     ru:'кино' },
+    { jp:'スポーツ', roma:'supootsu', ru:'спорт' },
+    { jp:'りょこう', roma:'ryokou',   ru:'путешествие' },
+    { jp:'どくしょ', roma:'dokusho',  ru:'чтение' },
+    { jp:'りょうり', roma:'ryouri',   ru:'кулинария' },
+    { jp:'ゲーム',   roma:'geemu',    ru:'игры' },
+    { jp:'サッカー', roma:'sakkaa',   ru:'футбол' },
+    { jp:'うたう',   roma:'utau',     ru:'петь' },
+    { jp:'よむ',     roma:'yomu',     ru:'читать' },
+  ]},
+  { id:'clothes', label:'Одежда', words:[
+    { jp:'シャツ',   roma:'shatsu',  ru:'рубашка' },
+    { jp:'ズボン',   roma:'zubon',   ru:'брюки' },
+    { jp:'スカート', roma:'sukaato', ru:'юбка' },
+    { jp:'くつ',     roma:'kutsu',   ru:'обувь' },
+    { jp:'ぼうし',   roma:'boushi',  ru:'шляпа / кепка' },
+    { jp:'コート',   roma:'kooto',   ru:'пальто' },
+    { jp:'セーター', roma:'seetaa',  ru:'свитер' },
+    { jp:'ドレス',   roma:'doresu',  ru:'платье' },
+    { jp:'くつした', roma:'kutsushita', ru:'носки' },
+    { jp:'きる',     roma:'kiru',    ru:'надевать' },
+  ]},
+  { id:'adj', label:'Прилагательные', words:[
+    { jp:'おおきい',   roma:'ookii',      ru:'большой' },
+    { jp:'ちいさい',   roma:'chiisai',    ru:'маленький' },
+    { jp:'あたらしい', roma:'atarashii',  ru:'новый' },
+    { jp:'ふるい',     roma:'furui',      ru:'старый' },
+    { jp:'たかい',     roma:'takai',      ru:'высокий / дорогой' },
+    { jp:'やすい',     roma:'yasui',      ru:'дешёвый' },
+    { jp:'かわいい',   roma:'kawaii',     ru:'милый' },
+    { jp:'たのしい',   roma:'tanoshii',   ru:'весёлый' },
+    { jp:'むずかしい', roma:'muzukashii', ru:'трудный' },
+    { jp:'やさしい',   roma:'yasashii',   ru:'лёгкий / добрый' },
+    { jp:'おいしい',   roma:'oishii',     ru:'вкусный' },
+    { jp:'きれい',     roma:'kirei',      ru:'красивый / чистый' },
+  ]},
+  { id:'nation', label:'Национальности', words:[
+    { jp:'にほん',      roma:'nihon',      ru:'Япония' },
+    { jp:'にほんじん',  roma:'nihonjin',   ru:'японец / японка' },
+    { jp:'アメリカ',    roma:'Amerika',    ru:'США' },
+    { jp:'アメリカじん',roma:'Amerikajin', ru:'американец' },
+    { jp:'ロシア',      roma:'Roshia',     ru:'Россия' },
+    { jp:'ロシアじん',  roma:'Roshiajin',  ru:'россиянин' },
+    { jp:'ちゅうごく',  roma:'Chuugoku',   ru:'Китай' },
+    { jp:'かんこく',    roma:'Kankoku',    ru:'Корея' },
+    { jp:'イギリス',    roma:'Igirisu',    ru:'Великобритания' },
+    { jp:'フランス',    roma:'Furansu',    ru:'Франция' },
+    { jp:'～じん',      roma:'~jin',       ru:'…-ец / …-ка (национальность)' },
+  ]},
+  { id:'home', label:'Жильё', words:[
+    { jp:'うち',     roma:'uchi',    ru:'мой дом' },
+    { jp:'いえ',     roma:'ie',      ru:'дом' },
+    { jp:'アパート', roma:'apaato',  ru:'квартира' },
+    { jp:'へや',     roma:'heya',    ru:'комната' },
+    { jp:'となり',   roma:'tonari',  ru:'рядом / по соседству' },
+    { jp:'ちかく',   roma:'chikaku', ru:'близко' },
+    { jp:'とおい',   roma:'tooi',    ru:'далеко' },
+    { jp:'まち',     roma:'machi',   ru:'город / район' },
+    { jp:'すむ',     roma:'sumu',    ru:'жить (где-то)' },
+    { jp:'どこ',     roma:'doko',    ru:'где?' },
+  ]},
+  { id:'time', label:'Время', words:[
+    { jp:'いま',       roma:'ima',       ru:'сейчас' },
+    { jp:'きょう',     roma:'kyou',      ru:'сегодня' },
+    { jp:'あした',     roma:'ashita',    ru:'завтра' },
+    { jp:'きのう',     roma:'kinou',     ru:'вчера' },
+    { jp:'まいにち',   roma:'mainichi',  ru:'каждый день' },
+    { jp:'あさ',       roma:'asa',       ru:'утро' },
+    { jp:'ひる',       roma:'hiru',      ru:'полдень / день' },
+    { jp:'よる',       roma:'yoru',      ru:'вечер / ночь' },
+    { jp:'しゅうまつ', roma:'shuumatsu', ru:'выходные' },
+    { jp:'らいしゅう', roma:'raishuu',   ru:'следующая неделя' },
+    { jp:'なんじ',     roma:'nanji',     ru:'который час?' },
+    { jp:'～じ',       roma:'~ji',       ru:'…часов' },
+  ]},
+];
+
+// vocab state
+let vTopicIdx  = 0;
+let vMode      = 'study'; // 'study' | 'quiz'
+let vDeck      = [];
+let vIdx       = 0;
+let vFlipped   = false;
+let vScore     = 0;
+let vTotal     = 0;
+
+function initVocab() {
+  renderVocabTopicsBar();
+  buildVocabDeck();
+}
+
+function renderVocabTopicsBar() {
+  document.getElementById('vocab-topics-bar').innerHTML = VOCAB_TOPICS.map((t, i) => `
+    <button class="vtopic-btn ${i === vTopicIdx ? 'active' : ''}" onclick="setVocabTopic(${i})">${t.label}</button>
+  `).join('');
+}
+
+function setVocabTopic(idx) {
+  vTopicIdx = idx;
+  renderVocabTopicsBar();
+  buildVocabDeck();
+}
+
+function setVocabMode(mode) {
+  vMode = mode;
+  document.getElementById('vmode-study').className = 'vmode-btn' + (mode === 'study' ? ' active' : '');
+  document.getElementById('vmode-quiz').className  = 'vmode-btn' + (mode === 'quiz'  ? ' active' : '');
+  buildVocabDeck();
+}
+
+function buildVocabDeck() {
+  vDeck    = [...VOCAB_TOPICS[vTopicIdx].words].sort(() => Math.random() - 0.5);
+  vIdx     = 0; vFlipped = false; vScore = 0; vTotal = 0;
+  renderVocabCard();
+}
+
+function renderVocabCard() {
+  const area = document.getElementById('vocab-area');
+  if (!area) return;
+
+  if (vIdx >= vDeck.length) {
+    area.innerHTML = `<div class="done-screen">
+      <div class="big-emoji">✨</div>
+      <h2>Тема пройдена!</h2>
+      <p>${vMode === 'quiz' ? `Результат: <strong>${vScore}</strong> из ${vTotal}` : `Слов в колоде: ${vDeck.length}`}</p>
+      <button class="btn-primary" onclick="buildVocabDeck()">↺ Ещё раз</button>
+    </div>`;
+    return;
+  }
+
+  const w = vDeck[vIdx];
+
+  if (vMode === 'study') {
+    area.innerHTML = `
+      <div style="font-size:0.82rem;color:var(--muted)">${vIdx + 1} / ${vDeck.length}</div>
+      <div class="vocab-card" onclick="vFlip()">
+        ${!vFlipped ? `
+          <div class="vc-ru">${w.ru}</div>
+          <div class="vc-hint">Нажми, чтобы увидеть по-японски</div>
+        ` : `
+          <div class="vc-jp">${w.jp}</div>
+          <div class="vc-roma">${w.roma}</div>
+          <div class="vc-ru2">${w.ru}</div>
+        `}
+      </div>
+      ${vFlipped ? `
+        <div class="card-actions">
+          <button class="btn-study" onclick="vRate(false)">Ещё учу</button>
+          <button class="btn-know"  onclick="vRate(true)">Знаю! ✓</button>
+        </div>` : '<div style="height:52px"></div>'}
+    `;
+  } else {
+    // quiz mode — 4 options
+    const allWords = VOCAB_TOPICS.flatMap(t => t.words);
+    const distractors = allWords.filter(x => x.jp !== w.jp).sort(() => Math.random() - 0.5).slice(0, 3);
+    const opts = [...distractors, w].sort(() => Math.random() - 0.5);
+
+    area.innerHTML = `
+      <div style="font-size:0.82rem;color:var(--muted)">${vIdx + 1} / ${vDeck.length} &nbsp;·&nbsp; ✓ ${vScore}</div>
+      <div class="vocab-card" style="cursor:default;min-height:120px">
+        <div class="vc-ru">${w.ru}</div>
+      </div>
+      <div class="quiz-opts">
+        ${opts.map(o => `
+          <div class="quiz-opt" onclick="vQuizPick(this, '${o.jp}', '${w.jp}')">
+            ${o.jp}<span class="qroma">${o.roma}</span>
+          </div>`).join('')}
+      </div>
+    `;
+  }
+}
+
+function vFlip() { vFlipped = !vFlipped; renderVocabCard(); }
+
+function vRate(know) {
+  vTotal++;
+  if (!know) {
+    const item = vDeck[vIdx];
+    const rest = vDeck.slice(vIdx + 1);
+    rest.splice(Math.floor(Math.random() * (rest.length + 1)), 0, item);
+    vDeck = [...vDeck.slice(0, vIdx + 1), ...rest];
+  } else { vScore++; }
+  vIdx++; vFlipped = false;
+  renderVocabCard();
+}
+
+function vQuizPick(el, picked, correct) {
+  if (el.classList.contains('disabled')) return;
+  document.querySelectorAll('.quiz-opt').forEach(o => o.classList.add('disabled'));
+  vTotal++;
+  if (picked === correct) {
+    el.classList.add('correct');
+    vScore++;
+    setTimeout(() => { vIdx++; renderVocabCard(); }, 900);
+  } else {
+    el.classList.add('wrong');
+    document.querySelectorAll('.quiz-opt').forEach(o => {
+      if (o.textContent.trim().startsWith(correct)) o.classList.add('correct');
+    });
+    setTimeout(() => { vIdx++; renderVocabCard(); }, 1500);
+  }
 }
 
 // ═══════════════════════════════════════════════
