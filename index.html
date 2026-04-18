@@ -251,6 +251,7 @@
     .slot.wrong    { border-color: var(--red-mid); background: var(--red-light); }
 
     .char-options { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; max-width: 500px; }
+    .char-options.dense { max-width: 780px; gap: 7px; }
 
     .char-opt {
       width: 64px; height: 64px; border-radius: 14px; border: 2px solid var(--border);
@@ -258,8 +259,17 @@
       transition: all 0.16s; display: flex; align-items: center; justify-content: center;
       box-shadow: var(--shadow);
     }
+    .char-options.dense .char-opt { width: 50px; height: 50px; font-size: 1.3rem; border-radius: 10px; }
     .char-opt:hover:not(.used) { border-color: var(--red-mid); background: var(--red-light); transform: scale(1.06); }
     .char-opt.used { opacity: 0.25; cursor: not-allowed; transform: none !important; }
+
+    .word-level-toggle { display: flex; gap: 8px; margin-bottom: 4px; }
+    .level-btn {
+      padding: 6px 16px; border-radius: 99px; border: 2px solid var(--border);
+      background: var(--white); cursor: pointer; font-size: 0.82rem; font-weight: 700;
+      transition: all 0.16s; color: var(--muted);
+    }
+    .level-btn.active { border-color: var(--red); color: var(--red); background: var(--red-light); }
 
     .word-feedback { font-size: 1.15rem; font-weight: 700; min-height: 30px; text-align: center; }
     .word-feedback.ok  { color: var(--green); }
@@ -371,6 +381,7 @@
     <div class="alpha-toggle">
       <button class="alpha-tab active" onclick="setAlpha('hiragana', this)">ひ Хирагана</button>
       <button class="alpha-tab" onclick="setAlpha('katakana', this)">カ Катакана</button>
+      <button class="alpha-tab" onclick="setAlpha('both', this)">ひカ Вместе</button>
     </div>
 
     <div id="kana-grid"></div>
@@ -657,6 +668,8 @@ const WORDS = [
 
 const DECOYS = ['あ','い','う','え','お','か','き','く','さ','し','す','た','て','と','な','に','は','ひ','ま','み','む','も','や','ら','り','る','ろ','わ','ん','の','ね','こ','そ','ほ'];
 
+const ALL_HIRA = HIRA_ROWS.flatMap(r => r.chars.filter(Boolean)).map(c => c.c);
+
 // ═══════════════════════════════════════════════
 // STATE
 // ═══════════════════════════════════════════════
@@ -682,6 +695,7 @@ let wUsed      = new Set(); // option indices used
 let wDone      = false;
 let wScore     = 0;
 let wTotal     = 0;
+let wLevel     = 1;
 
 // modal
 let modalItem  = null;
@@ -720,11 +734,7 @@ function setAlpha(type, btn) {
   renderKanaGrid();
 }
 
-function renderKanaGrid() {
-  const rows = currentAlpha === 'hiragana' ? HIRA_ROWS : KATA_ROWS;
-  const grid = document.getElementById('kana-grid');
-  grid.innerHTML = '';
-
+function renderKanaSection(rows, grid) {
   rows.forEach(row => {
     const lbl = document.createElement('div');
     lbl.className = 'kana-section-label';
@@ -752,6 +762,41 @@ function renderKanaGrid() {
     });
     grid.appendChild(rowEl);
   });
+}
+
+function renderKanaGrid() {
+  const grid = document.getElementById('kana-grid');
+  grid.innerHTML = '';
+
+  if (currentAlpha === 'both') {
+    const hdr1 = document.createElement('div');
+    hdr1.className = 'kana-section-label';
+    hdr1.style.cssText = 'font-size:1rem;color:var(--red);border-bottom:2px solid var(--red);margin-top:0';
+    hdr1.textContent = 'ひ Хирагана';
+    grid.appendChild(hdr1);
+    renderKanaSection(HIRA_ROWS, grid);
+
+    const dakuLbl = document.createElement('div');
+    dakuLbl.className = 'kana-section-label';
+    dakuLbl.textContent = '濁点 (dakuten) — озвончённые варианты';
+    grid.appendChild(dakuLbl);
+    const note = document.createElement('div');
+    note.className = 'dakuten-note';
+    note.innerHTML = `<strong>Что такое 濁点?</strong> Две точки ゛(dakuten) делают согласную звонкой: か→が (ka→ga), さ→ざ (sa→za), た→だ (ta→da), は→ば (ha→ba). Полукружие ゜(handakuten) даёт P-звук: は→ぱ (ha→pa).<br><br>
+    <strong>Часто встречаются:</strong> ${DAKUTEN_HIRA.map(d => `${d.c} (${d.r})`).join('  ')}`;
+    grid.appendChild(note);
+
+    const hdr2 = document.createElement('div');
+    hdr2.className = 'kana-section-label';
+    hdr2.style.cssText = 'font-size:1rem;color:var(--red);border-bottom:2px solid var(--red);margin-top:28px';
+    hdr2.textContent = 'カ Катакана';
+    grid.appendChild(hdr2);
+    renderKanaSection(KATA_ROWS, grid);
+    return;
+  }
+
+  const rows = currentAlpha === 'hiragana' ? HIRA_ROWS : KATA_ROWS;
+  renderKanaSection(rows, grid);
 
   if (currentAlpha === 'hiragana') {
     const lbl = document.createElement('div');
@@ -920,6 +965,12 @@ function fcRate(know) {
 // ═══════════════════════════════════════════════
 // WORDS
 // ═══════════════════════════════════════════════
+function setWLevel(level) {
+  wLevel = level;
+  wSelected = []; wUsed = new Set(); wDone = false;
+  startWord();
+}
+
 function initWords() {
   wWords  = [...WORDS].sort(() => Math.random() - 0.5);
   wIdx    = 0; wScore = 0; wTotal = 0;
@@ -931,10 +982,16 @@ function startWord() {
   const w = wWords[wIdx];
   wSelected = []; wUsed = new Set(); wDone = false;
 
-  const needed = w.chars;
-  const decoyPool = DECOYS.filter(c => !needed.includes(c)).sort(() => Math.random() - 0.5);
-  const decoys    = decoyPool.slice(0, Math.min(4, needed.length + 1));
-  const opts      = [...needed, ...decoys].sort(() => Math.random() - 0.5);
+  let opts;
+  if (wLevel === 2) {
+    // Full hiragana alphabet — correct chars are already in there
+    opts = [...ALL_HIRA].sort(() => Math.random() - 0.5);
+  } else {
+    const needed = w.chars;
+    const decoyPool = DECOYS.filter(c => !needed.includes(c)).sort(() => Math.random() - 0.5);
+    const decoys    = decoyPool.slice(0, Math.min(4, needed.length + 1));
+    opts = [...needed, ...decoys].sort(() => Math.random() - 0.5);
+  }
 
   renderWord(w, opts);
 }
@@ -957,6 +1014,10 @@ function renderWord(w, opts) {
   }).join('');
 
   area.innerHTML = `
+    <div class="word-level-toggle">
+      <button class="level-btn ${wLevel===1?'active':''}" onclick="setWLevel(1)">Уровень 1</button>
+      <button class="level-btn ${wLevel===2?'active':''}" onclick="setWLevel(2)">Уровень 2</button>
+    </div>
     <div class="word-score-bar">${wScore} правильно / ${wTotal} слов</div>
     <div class="word-clue">
       <div class="word-meaning">${w.ru}</div>
@@ -964,7 +1025,7 @@ function renderWord(w, opts) {
     </div>
     <div style="font-size:0.82rem;color:var(--muted)">Составь слово из букв:</div>
     <div class="word-slots">${slots}</div>
-    <div class="char-options">${options}</div>
+    <div class="char-options${wLevel===2?' dense':''}">${options}</div>
     <div class="word-feedback ${wDone ? 'ok' : ''}" id="w-feedback">${wDone ? '✓ Правильно!  ' + w.kana : ''}</div>
     <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center">
       ${wDone ? `<button class="btn-primary" onclick="wNext()">Следующее →</button>` : ''}
